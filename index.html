@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="SV4D 2.0 generates novel multi-view video synthesis from a single reference video.">
+  <meta name="keywords" content="Video Diffusion, 4D Generation, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SV4D 2.0: Enhancing Spatio-Temporal Consistency in Multi-View Video Diffusion for High-Quality 4D Generation</title>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:wght@600|Lato:wght@400;700|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="./static/css/gallery.css"/>
+  <link rel="icon" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="./static/js/gallery.js"></script>
+</head>
+<body>
+
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">SV4D 2.0: Enhancing Spatio-Temporal Consistency in Multi-View Video Diffusion for High-Quality 4D Generation</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://chhankyao.github.io">Chun-Han Yao</a><sup>1</sup><sup>*</sup>,</span>
+            <span class="author-block">
+              <a href="https://ymingxie.github.io/">Yiming Xie</a><sup>1,2</sup><sup>*</sup>,</span>
+            <span class="author-block">
+              <a href="https://voletiv.github.io">Vikram Voleti</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://jianghz.me/">Huaizu Jiang</a><sup>2</sup><sup>^</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://varunjampani.github.io">Varun Jampani</a><sup>1</sup><sup>^</sup>
+            </span>
+          </div>
+
+          
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Stability AI,</span>
+            <span class="author-block"><sup>2</sup>Northeastern University</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>*</sup>Equal contribution</span>
+            <span class="author-block"><sup>^</sup>Equal advising</span>
+          </div>
+          
+          <div>
+	          <span><img src="./static/images/stability_logo.jpg" width="20%"></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span></span><img src="./static/images/neu_logo.png" width="6%"></span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- arXiv Link. -->
+              <span class="link-block">
+                <!-- TODO -->
+                <a href="https://arxiv.org/pdf/2503.16396"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- <span class="link-block">
+                <a href="https://huggingface.co/stabilityai/sv4d" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-desktop"></i>
+                  </span>
+                  <span>Model</span>
+                </a>
+              </span> -->
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://youtu.be/xxxxxxx" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <!-- TODO -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/Stability-AI/generative-models"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span> -->
+              <!-- blog Link. -->
+              <!-- <span class="link-block">
+                <a href="https://stability.ai/news/stable-video-4d"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Blog</span>
+                  </a>
+                </span> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/images/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">SV4D 2.0</span> takes a reference video as input and generates novel view videos and 4D models.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<div id="lightbox" class="modal">
+  <span class="close cursor" onclick="closeModal()">&times;</span>
+  <div class="modal-content"></div> 
+</div>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          We present Stable Video 4D 2.0 (SV4D 2.0), a multi-view video diffusion model for dynamic 3D asset generation. 
+          Compared to its predecessor SV4D, SV4D 2.0 is more robust to occlusions and large motion, generalizes better to real-world videos, and produces much higher quality outputs in terms of detail sharpness and spatio-temporal consistency. 
+          We achieve this by introducing key improvements in multiple aspects: 
+          1) network architecture: eliminating the dependency of reference multi-views and designing blending mechanism for 3D and frame attention, 
+          2) data: enhancing quality of training data, 3) training strategy: adopting progressive 3D-4D training for better generalization, and 
+          4) 4D optimization: handling 3D inconsistency and large motion via 2-stage refinement and progressive frame sampling. 
+          Our extensive experiments demonstrate significant performance gain by SV4D 2.0 both visually and quantitatively, achieving better detail (-14% LPIPS) and 4D consistency (-44% FV4D) in novel-view video synthesis and 4D optimization (-12% LPIPS and -24% FV4D) compared to SV4D.
+        </div>
+      </div>
+    </div>
+
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video id="teaser" autoplay muted loop playsinline height="100%">
+          <source src="./static/images/pipeline3.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+    
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Summary Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/dtqj-s50ynU?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Visualization Results</h2>
+      </div>
+    </div>
+  <div class="columns is-centered">
+    <video id="teaser" autoplay muted loop playsinline width="40%">
+      <source src="./static/images/nvs_ours_syn_0_264.mp4"
+              type="video/mp4">
+    </video>
+    <video id="teaser" autoplay muted loop playsinline width="40%">
+      <source src="./static/images/nvs_ours_real_1_264.mp4"
+              type="video/mp4">
+    </video>
+  </div>
+  <div class="columns is-centered">
+    <video id="teaser" autoplay muted loop playsinline width="40%">
+      <source src="./static/images/opt_ours_syn_0_264.mp4"
+              type="video/mp4">
+    </video>
+    <video id="teaser" autoplay muted loop playsinline width="40%">
+      <source src="./static/images/opt_ours_real_0_264.mp4"
+              type="video/mp4">
+    </video>
+  </div>
+
+</section>
+
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Visual Comparisons</h2>
+
+        <!-- NVS -->
+        <h3 class="title is-4">Novel View Video Synthesis</h3>
+
+        <p>
+        <big>Comparing our results with baselines on Objaverse dataset.</big>
+        </p>
+      </div>
+    </div>
+    
+    <div class="container">
+      <!-- EGT -->
+      <div class="content">
+        
+      <div class="video-body">
+        <div class="video-container">
+          <video id="main-video-comparison" autoplay controls muted loop playsinline>
+              <source src="./static/images/nvs_synthetic1_1_264.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="thumbnail-container">
+          <img src="./static/thumbnail/nvs_synthetic1_1.png" alt="Video 1" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic1_1_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic1_0.png" alt="Video 2" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic1_0_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic1_2.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic1_2_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic2_0.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic2_0_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic2_1.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic2_1_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic2_2.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic2_2_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic3_0.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic3_0_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic3_1.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic3_1_264.mp4">
+          <!-- <img src="./static/thumbnail/nvs_synthetic3_2.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic3_2_264.mp4"> -->
+          <img src="./static/thumbnail/nvs_synthetic4_0.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic4_0_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic4_1.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic4_1_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic4_2.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic4_2_264.mp4">
+          <img src="./static/thumbnail/nvs_synthetic4_3.png" alt="Video 3" class="thumbnail-comparison" data-video="./static/images/nvs_synthetic4_3_264.mp4">
+        </div>
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <br>
+        <em>Click on the thumbnail image to select and change the input video. <em>
+        <br>
+        <br>
+      </div>
+      <br>
+      </div>
+      
+    </div>
+
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <p>
+          <big>Comparing our results with baselines on DAVIS dataset. </big>
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- EGT -->
+      <div class="content">
+        
+      <div class="video-body">
+        <div class="video-container">
+          <video id="main-video-comparison1" autoplay controls muted loop playsinline>
+              <source src="./static/images/nvs_real1_0_264.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="thumbnail-container">
+          <img src="./static/thumbnail/nvs_real1_0.png" alt="Video 1" class="thumbnail-comparison1" data-video="./static/images/nvs_real1_0_264.mp4">
+          <img src="./static/thumbnail/nvs_real1_1.png" alt="Video 2" class="thumbnail-comparison1" data-video="./static/images/nvs_real1_1_264.mp4">
+          <img src="./static/thumbnail/nvs_real1_2.png" alt="Video 3" class="thumbnail-comparison1" data-video="./static/images/nvs_real1_2_264.mp4">
+          <img src="./static/thumbnail/nvs_real2_0.png" alt="Video 3" class="thumbnail-comparison1" data-video="./static/images/nvs_real2_0_264.mp4">
+          <img src="./static/thumbnail/nvs_real2_1.png" alt="Video 3" class="thumbnail-comparison1" data-video="./static/images/nvs_real2_1_264.mp4">
+          <img src="./static/thumbnail/nvs_real3_0.png" alt="Video 3" class="thumbnail-comparison1" data-video="./static/images/nvs_real3_0_264.mp4">
+          <img src="./static/thumbnail/nvs_real3_1.png" alt="Video 3" class="thumbnail-comparison1" data-video="./static/images/nvs_real3_1_264.mp4">
+          <img src="./static/thumbnail/nvs_real3_2.png" alt="Video 3" class="thumbnail-comparison1" data-video="./static/images/nvs_real3_2_264.mp4">
+        </div>
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <br>
+        <em>Click on the thumbnail image to select and change the input video. <em>
+        <br>
+        <br>
+      </div>
+      <br>
+      </div>
+      
+    </div>
+
+
+    <br>
+    <br>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <!-- 4D -->
+        <h3 class="title is-4">4D Optimization</h3>
+      </div>
+    </div>
+    
+    <!-- <div class="columns is-centered has-text-centered"></div>
+      <div class="column is-four-fifths">
+        <p>
+          Comparing our results with baselines on Objaverse and DAVIS dataset.
+        </p>
+      </div>
+    </div> -->
+
+    <div class="container">
+      <!-- EGT -->
+      <div class="content">
+        
+      <div class="video-body">
+        <div class="video-container">
+          <video id="main-video-comparison2" autoplay controls muted loop playsinline>
+              <source src="./static/images/opt_synthetic_0_264.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="thumbnail-container">
+          <img src="./static/thumbnail/opt_synthetic_0.png" alt="Video 1" class="thumbnail-comparison2" data-video="./static/images/opt_synthetic_0_264.mp4">
+          <img src="./static/thumbnail/opt_synthetic_1.png" alt="Video 3" class="thumbnail-comparison2" data-video="./static/images/opt_synthetic_1_264.mp4">
+          <img src="./static/thumbnail/opt_synthetic_2.png" alt="Video 3" class="thumbnail-comparison2" data-video="./static/images/opt_synthetic_2_264.mp4">
+          <img src="./static/thumbnail/opt_real_0.png" alt="Video 2" class="thumbnail-comparison2" data-video="./static/images/opt_real_0_264.mp4">
+          <img src="./static/thumbnail/opt_real_1.png" alt="Video 3" class="thumbnail-comparison2" data-video="./static/images/opt_real_1_264.mp4">
+          <img src="./static/thumbnail/opt_real_2.png" alt="Video 2" class="thumbnail-comparison2" data-video="./static/images/opt_real_2_264.mp4">
+          <img src="./static/thumbnail/opt_real_3.png" alt="Video 3" class="thumbnail-comparison2" data-video="./static/images/opt_real_3_264.mp4">
+        </div>
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <br>
+        <em>Click on the thumbnail image to select and change the input video. <em>
+        <br>
+        <br>
+      </div>
+      <br>
+      </div>
+      
+    </div>
+
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Comparing to L4GM</h2>
+
+        <!-- NVS -->
+        <h3 class="title is-4">On Real-world data</h3>
+        <p>L4GM does not generalize well on real-world data (no video prior like ours) and struggles with videos at non-zero elevation (training data primarily at 0° elevation).</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- EGT -->
+      <div class="content">
+        
+      <div class="video-body">
+        <div class="video-container">
+          <video id="main-video-comparison3" autoplay controls muted loop playsinline>
+              <source src="./static/images/l4gm_real1.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="thumbnail-container">
+          <img src="./static/thumbnail/nvs_real1_2.png" alt="Video 1" class="thumbnail-comparison3" data-video="./static/images/l4gm_real1.mp4">
+          <img src="./static/thumbnail/opt_real_0.png" alt="Video 2" class="thumbnail-comparison3" data-video="./static/images/l4gm_real2.mp4">
+          <img src="./static/thumbnail/opt_real_1.png" alt="Video 3" class="thumbnail-comparison3" data-video="./static/images/l4gm_real3.mp4">
+        </div>
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <br>
+        <em>Click on the thumbnail image to select and change the input video. <em>
+        <br>
+        <br>
+      </div>
+      <br>
+      </div>
+      
+    </div>
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">On the input video with non-zero elevations </h3>
+
+      </div>
+    </div>
+
+
+    <div class="container">
+      <!-- EGT -->
+      <div class="content">
+        
+      <div class="video-body">
+        <div class="video-container">
+          <video id="main-video-comparison4" autoplay controls muted loop playsinline>
+              <source src="./static/images/l4gm_elev1.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="thumbnail-container">
+          <img src="./static/thumbnail/nvs_synthetic3_2.png" alt="Video 1" class="thumbnail-comparison4" data-video="./static/images/l4gm_elev1.mp4">
+          <img src="./static/thumbnail/nvs_synthetic1_0.png" alt="Video 2" class="thumbnail-comparison4" data-video="./static/images/l4gm_elev2.mp4">
+          <img src="./static/thumbnail/supp1.jpg" alt="Video 3" class="thumbnail-comparison4" data-video="./static/images/l4gm_elev3.mp4">
+          <!-- <img src="./static/thumbnail/nvs_synthetic3_1.png" alt="Video 3" class="thumbnail-comparison4" data-video="./static/images/l4gm_elev4.mp4"> -->
+        </div>
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <br>
+        <em>Click on the thumbnail image to select and change the input video. <em>
+        <br>
+        <br>
+      </div>
+      <br>
+      </div>
+      
+    </div>
+
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">4D Optimization Results with Continuous View and Time Changes</h2>
+
+      </div>
+    </div>
+    <div class="container is-max-desktop">
+      <video id="4d_continuous" autoplay muted loop playsinline height="100%">
+        <source src="./static/images/4D_conti1.mp4"
+                type="video/mp4">
+      </video>
+      <video id="4d_continuous" autoplay muted loop playsinline height="100%">
+        <source src="./static/images/4D_conti2.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">SV4D 2.0 with DyNeRF vs 4D Gaussians</h2>
+        <p>In our sparse-view setting: <br>
+          1. 4D Gaussians suffer from temporal flickering and floater artifacts due to its discrete nature. <br>
+          2. DyNeRF interpolates better across sparse views and fast motion. </p>
+      </div>
+    </div>
+    <div class="container is-max-desktop">
+      <video id="4d_continuous" autoplay muted loop playsinline height="100%">
+        <source src="./static/images/4d_gaussian.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Acknowledgement. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Acknowledgement</h2>
+        <div class="content has-text-justified">
+          We sincerely thank the creators of the 3D models (
+            <a href="https://sketchfab.com/3d-models/vintage-film-camera-eumig-c16r-c44e95e75f4c45ffbe522c0533c75530">Camera</a>,
+            <a href="https://sketchfab.com/3d-models/direction-arrow-6ef46718c7b242e39fcad7f27ee858a5">Arrow</a>,
+            <a href="https://sketchfab.com/3d-models/office-monitor-workstation-monitor-6a7b0147890242418a49f6db26657ab4">Monitor</a>,
+            <a href="https://sketchfab.com/3d-models/sci-fi-pedestal-28ce7db0b59d4e9d9a64f3299f032345">Pedestal</a>
+            ) used in our teaser and pipeline illustrations.
+        </div>
+      </div>
+    </div>
+    <!--/ Acknowledgement. -->
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>
+	@article{yao2024sv4d2,
+	    title={{SV4D2.0}: Enhancing Spatio-Temporal Consistency in Multi-View Video Diffusion for High-Quality 4D Generation}, 
+	    author={Chun-Han Yao and Yiming Xie and Vikram Voleti and Huaizu Jiang and Varun Jampani},
+	    journal={arXiv preprint arXiv:2503.xxxxx},
+	    year={2025},
+	}
+    </code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+        <div class="content">
+          <p>
+            This website is based on the template from <a
+              href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
